@@ -8,8 +8,8 @@ const mongoose = require("mongoose")
 //     console.log(error)
 // })
 
-// const connectionString = 'mongodb+srv://amit:amit93023@cluster0.ba5ekm2.mongodb.net/AdminDashboard';
-const connectionString = 'mongodb://127.0.0.1/adminDashboard';
+const connectionString = 'mongodb+srv://amit:amit93023@cluster0.ba5ekm2.mongodb.net/AdminDashboard';
+// const connectionString = 'mongodb://127.0.0.1/adminDashboard';
 
 
 mongoose.connect(connectionString, {
