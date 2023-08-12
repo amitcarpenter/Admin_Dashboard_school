@@ -31,19 +31,40 @@
     rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
     crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typicons.font@2.0.9/src/font/typicons.min.css">
+
+
+
+
+  <style>
+    .toggleIcon {
+      font-size: 20px;
+      height: 48px;
+      width: 57px;
+      font-weight: bold;
+      margin-left: 12px;
+    }
+
+    body {
+      font-size: 18px !important;
+    }
+
+    #profile-image {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      /* margin-right: 40px; */
+
+    }
+
+    .fons {
+      font-size: 22px;
+    }
+  </style>
 </head>
 
-
-<style>
-  .toggleIcon{
-    font-size: 20px;
-    height: 48px;
-    width: 57px;
-    font-weight: bold;
-    margin-left: 12px;
-  }
-
-</style>
 
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -61,8 +82,30 @@
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
-        <div class="mr-4  ">Admin</div>
-        <!-- Navbar Search -->
+
+
+        <div class="container mt-3">
+          <div class="dropdown">
+            <img
+              src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt="Profile Image" id="profile-image" class="dropdown-toggle" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+            <div class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="profile-image"
+              style="left: auto; right: 0;">
+              <a class="dropdown-item" href="/editProfile"> <i class="typcn typcn-cog-outline text-primary fons"></i>
+                &nbsp; Edit Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/logout"> <i class="typcn typcn-eject text-primary fons"></i>
+                &nbsp;
+                Logout</a>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
 
 
 
@@ -77,16 +120,39 @@
         justify-content: center;
         margin: auto;
       }
-      body{
+
+      body {
         font-size: 12px;
+      }
+
+      .Schoolma {
+        font-size: 20px;
+        color: #82e2f1;
+        text-align: center;
+        margin-top: 12px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        transition: color 0.3s, transform 0.3s;
+        /* Add smooth transitions */
+      }
+
+      .Schoolma:hover {
+        /* color: #e74c3c; */
+        transform: scale(1.05);
+      }
+
+      a {
+        color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+        text-decoration: none;
       }
     </style>
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4 " style=" background:#15154C;">
       <!-- Brand Logo -->
-      <a href="##" style="margin-left:22px;">
-        <img src="https://preview.colorlib.com/theme/kindergarten/assets/img/logo/logo.png.webp" class="logoImage"
-          width="100px" height="30px" alt="">
+      <a href="##" style="margin-left:22px ;">
+        <h1 class="Schoolma">School Management</h1>
+        <div>
+          <h5 class="Schoolma">System</h5>
+        </div>
         <hr style="color:white; border:solid;">
       </a>
 
@@ -114,9 +180,12 @@
             <li class="nav-item">
             <li class="nav-item">
               <a href="/dashboard" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-                  <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-                  <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-speedometer2" viewBox="0 0 16 16">
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z" />
+                  <path fill-rule="evenodd"
+                    d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z" />
                 </svg>
                 &nbsp;&nbsp;
                 <p>Dashboard</p>
@@ -142,10 +211,10 @@
                 &nbsp;&nbsp;
                 <p>About</p>
               </a>
-            </li> 
+            </li>
             <li class="nav-item">
               <a href="/blog" class="nav-link">
-                <span class="fa fa-pencil"></span> 
+                <span class="fa fa-pencil"></span>
                 &nbsp;&nbsp;
                 <p>
                   Blog
@@ -183,15 +252,16 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <% if (currentUrl === "/blog") { %>
+                <% if (currentUrl==="/blog" ) { %>
                   <li class="breadcrumb-item">
-                    <a href="/blog/add-post" class="btn btn-primary  mr-2" data-toggle="modal" data-target="#addPostModal">
-                      <i class="bi bi-plus"></i>    Add Post
+                    <a href="/blog/add-post" class="btn btn-primary  mr-2" data-toggle="modal"
+                      data-target="#addPostModal">
+                      <i class="bi bi-plus"></i> Add Post
                     </a>
                   </li>
                   <% } %>
-                   
-                    <li class="breadcrumb-item active"><a href="/logout">logout</a></li>
+
+
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->

@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken")
 // Register Admin
 const RegisterAdmin = async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { email, password, firstname, lastname , profileImage } = req.body
 
         let admin = await Admin.findOne({ email })
         if (admin) {
@@ -17,6 +17,8 @@ const RegisterAdmin = async (req, res) => {
         }
         const hashedpassword = await bcrypt.hash(password, 10)
         admin = await Admin.create({
+            firstname,
+            lastname,
             email,
             password: hashedpassword
         })
@@ -36,6 +38,16 @@ const loginLoader = async (req, res) => {
     try {
 
         res.render('login')
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+//Login Loader 
+const register = async (req, res) => {
+    try {
+
+        res.render('register')
 
     } catch (error) {
         console.log(error)
@@ -160,9 +172,63 @@ const headerLoader = async (req, res) => {
 }
 
 
+const profileLoader = async (req, res) => {
+    try {
+        res.render("editProfile")
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 
+
+
+// Set up routes
+// const getProfileData = async (req, res) => {
+//     try {
+//         const user = await Admin.findById(req.params.id);
+//         res.render('editProfile', { user });
+//     } catch (err) {
+//         res.status(500).json({ message: 'Error fetching user' });
+//     }
+// };
+
+const updateProfile = async (req, res) => {
+    try {
+        const user = await Admin.findByIdAndUpdate(req.params.id, {
+            name: req.body.name,
+            profileImage: req.file.filename
+        });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating user' });
+    }
+};
+
+
+
+const logout = async (req, res) => {
+    try {
+        res.redirect("/")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+
+const getProfileData = async (req, res) => {
+    try {
+        const preFilledData = await Admin.findOne({}); // Retrieve a single user from the database
+        res.render('editProfile', { preFilledData });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data from the database');
+    }
+};
 
 module.exports = {
     RegisterAdmin,
@@ -175,4 +241,9 @@ module.exports = {
     blogDetailLoader,
     blogLoader,
     classLoader,
+    profileLoader,
+    getProfileData,
+    updateProfile,
+    logout,
+    register ,
 }
