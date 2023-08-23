@@ -29,15 +29,16 @@ const dataSchema = new mongoose.Schema({
         default: "",
     },
 
+    cover: {
+        type: String,
+        default: ""
+    },
+
     createdAt: {
         type: Date,
         default: Date.now
     },
 
-    cover: {
-        type: String,
-        default: ""
-    },
 
 })
 

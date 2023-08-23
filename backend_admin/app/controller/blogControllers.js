@@ -1,18 +1,14 @@
 const Blog = require("../models/blogModels")
+const Admin = require("../models/adminModels")
 
 
 //Blog loader 
 const blogLoader = async (req, res) => {
     try {
 
-        await Blog.find()
-            .then((data) => {
-                res.render('blog', { data });
-            })
-            .catch((error) => {
-                console.error('Error fetching data', error);
-                res.sendStatus(500);
-            });
+        const [data, profileData] = await Promise.all([Blog.find(), Admin.find()]);
+        res.render('blog', { data, profileData });
+
     } catch (error) {
         console.log(error)
     }
@@ -99,7 +95,7 @@ const updateData = async (req, res) => {
     const id = req.params.id;
     const { section, title, category, description, authorName } = req.body;
 
-    const newCover = req.files['image'] ? req.files['image'][0].path : ''; // Get the new uploaded image path
+    const newCover = req.files['cover'] ? req.files['cover'][0].path : ''; // Get the new uploaded image path
 
     // Retrieve existing blog data from the database
     const existingBlog = await Blog.findById(id);
@@ -116,14 +112,14 @@ const updateData = async (req, res) => {
         },
         { new: true }
     )
-    .then(() => {
-        res.redirect("/blog");
-        console.log("updated");
-    })
-    .catch((error) => {
-        console.error('Error updating data', error);
-        res.sendStatus(500);
-    });
+        .then(() => {
+            res.redirect("/blog");
+            console.log("updated");
+        })
+        .catch((error) => {
+            console.error('Error updating data', error);
+            res.sendStatus(500);
+        });
 };
 
 
@@ -220,20 +216,20 @@ const postPageData = async (req, res) => {
 
 const viewButton = async (req, res) => {
     try {
-      const blogId = req.params.id;
-      const blog = await Blog.findById(blogId);
-      console.log(blog)
-      
-      // Render the blog.ejs template with the retrieved blog data
-      res.render('blog-view', { data: blog });
-      console.log(blog) 
+        const blogId = req.params.id;
+        const blog = await Blog.findById(blogId);
+        console.log(blog)
+
+        // Render the blog.ejs template with the retrieved blog data
+        res.render('blog-view', { data: blog });
+        console.log(blog)
     } catch (error) {
-      console.error('Error fetching blog post', error);
-      res.sendStatus(500);
+        console.error('Error fetching blog post', error);
+        res.sendStatus(500);
     }
-  };
-  
-  
+};
+
+
 
 
 // const blogController = async (req, res) => {
@@ -258,16 +254,16 @@ const viewButton = async (req, res) => {
 const deleteBlog = async (req, res) => {
     try {
         const blogId = req.params.id;
-    
+
         // Perform the deletion logic here, such as deleting the blog from the database
         await Blog.findByIdAndDelete(blogId);
-    
+
         // Redirect to the main blog page
         res.redirect('/blog');
-      } catch (error) {
+    } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
-      }
-  };
+    }
+};
 
 module.exports = {
 
@@ -282,6 +278,6 @@ module.exports = {
     PostLoader,
     addPost,
     viewButton,
-    deleteBlog, 
+    deleteBlog,
     // blogController,
 }

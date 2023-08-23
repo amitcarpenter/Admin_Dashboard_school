@@ -1,7 +1,8 @@
 const express = require('express')
 const multer = require('multer');
 const path = require('path');
-const { aboutLoader, postData, editLoader, updateData  ,getdata} = require('../controller/aboutController');
+const { aboutLoader, postData, editLoader, updateData, getdata } = require('../controller/aboutController');
+const { isLogout, isLogin } = require('../middleware/auth')
 
 
 
@@ -28,7 +29,7 @@ router.use(express.urlencoded({ extended: true }))
 
 
 // Routing 
-router.get("/", aboutLoader)
+router.get("/", isLogin, aboutLoader)
 
 router.get("/getdata", getdata)
 

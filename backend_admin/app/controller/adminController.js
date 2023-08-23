@@ -3,12 +3,13 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 
+const jwtSecretKey = 'AmitcarPenter';
 
 
 // Register Admin
 const RegisterAdmin = async (req, res) => {
     try {
-        const { email, password, firstname, lastname , profileImage } = req.body
+        const { email, password, firstname, lastname, profileImage } = req.body
 
         let admin = await Admin.findOne({ email })
         if (admin) {
@@ -56,27 +57,36 @@ const register = async (req, res) => {
 
 // Login Admin
 const LoginAdmin = async (req, res) => {
-    const { email, password } = req.body;
-    console.log(email, "dfa", password)
-
+    const { email, password } = req.body
+    // console.log(email , password)
     try {
-        // Find the admin user in the database
-        const admin = await Admin.find({ email, password }).exec();
+        const user = await Admin.findOne({ email })
+        if (user) {
+            const passwordMatch = await bcrypt.compare(password, user.password)
+            if (passwordMatch) {
+                req.session.user_id = user._id
+                res.redirect('/dashboard')
+                console.log('Login Success Fully')
+                const token = jwt.sign({ userId: user._id }, jwtSecretKey);
 
-        if (!admin) {
-            return res.status(401).send('Invalid username or password');
+            }
+            else {
+                res.render('login', {
+                    massage: 'Email and Password is Incorrect',
+                })
+            }
+        } else {
+            res.render('login', {
+                massage: 'Email and Password is Incorrect',
+            })
         }
 
-        // Store the admin user in the session
-        req.session.admin = admin._id;
-
-        // Redirect to the admin dashboard
-        res.redirect('/dashboard');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+    } catch (error) {
+        console.log("eroor")
+        console.error(error)
     }
-};
+}
+
 
 
 
@@ -85,10 +95,18 @@ const LoginAdmin = async (req, res) => {
 
 
 
-//Dashboard loader 
+
+
+
+//Dashboard loader  
 const dashboardLoader = async (req, res) => {
     try {
-        res.render("dashboard")
+
+        const [data, profileData] = await Promise.all([Admin.find(), Admin.find()]);
+        res.render('dashboard', { data, profileData });
+
+
+
     } catch (error) {
         console.log(error)
     }
@@ -96,54 +114,8 @@ const dashboardLoader = async (req, res) => {
 }
 
 
-// Class Loader
-const classLoader = async (req, res) => {
-    try {
-        const id =
-            res.render("class")
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 
-
-// Blog Loader    
-const blogLoader = async (req, res) => {
-    try {
-
-        res.render("blog")
-    } catch (error) {
-        console.log(error)
-    }
-
-
-}
-
-
-// Blog detail Loader    
-const blogDetailLoader = async (req, res) => {
-    try {
-
-        res.render("blog-detail")
-    } catch (error) {
-        console.log(error)
-    }
-
-
-}
-
-// Elements  Loader    
-const ElementLoader = async (req, res) => {
-    try {
-
-        res.render("element")
-    } catch (error) {
-        console.log(error)
-    }
-
-
-}
 
 
 // About Loader    
@@ -159,51 +131,50 @@ const contactLoader = async (req, res) => {
 }
 
 
-//Header Loader 
-const headerLoader = async (req, res) => {
 
+// Edit Form Loader
+const editLoader = async (req, res) => {
     try {
-        res.render("header")
-    } catch (error) {
-        console.log(error)
+        let data = await Admin.find()
+        data = data[0]
+        // console.log(data)
 
+        res.render('editProfile', { data });
+    } catch (error) {
+        console.error('Error fetching data for editing', error);
+        res.sendStatus(500);
     }
 
-}
-
-
-const profileLoader = async (req, res) => {
-    try {
-        res.render("editProfile")
-
-    } catch (error) {
-        console.log(error)
-    }
-}
+};
 
 
 
 
 
-// Set up routes
-// const getProfileData = async (req, res) => {
-//     try {
-//         const user = await Admin.findById(req.params.id);
-//         res.render('editProfile', { user });
-//     } catch (err) {
-//         res.status(500).json({ message: 'Error fetching user' });
-//     }
-// };
+
 
 const updateProfile = async (req, res) => {
+
+    const { firstname, lastname, email, userId } = req.body;
+
+    const newImage = req.files['profileImage'] ? req.files['profileImage'][0].path : '';
+
+    const existingBlog = await Admin.findById(userId);
+
+    const profileImage = newImage ? newImage : existingBlog.profileImage;
+
+
     try {
-        const user = await Admin.findByIdAndUpdate(req.params.id, {
-            name: req.body.name,
-            profileImage: req.file.filename
-        });
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ message: 'Error updating user' });
+        // Find user by ID and update
+        const updatedUser = await Admin.findByIdAndUpdate(userId, { $set: { firstname, lastname, email, profileImage } }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).redirect("/edit");
+    } catch (error) {
+        res.status(500).json({ message: 'An error occurred', error: error.message });
     }
 };
 
@@ -211,6 +182,7 @@ const updateProfile = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
+        req.session.destroy()
         res.redirect("/")
     } catch (error) {
         console.log(error)
@@ -219,31 +191,81 @@ const logout = async (req, res) => {
 
 
 
-
-const getProfileData = async (req, res) => {
+const updateProflieApi = async (req, res) => {
+    console.log("hello  ")
+    const { id } = req.params;
+    const { firstname, lastname } = req.body;
+    // const newCover = req.files['image'] ? req.files['image'][0].path : '';
+    // const existingBlog = await Admin.findById(id);
+    // const cover = newCover ? newCover : existingBlog.cover;
     try {
-        const preFilledData = await Admin.findOne({}); // Retrieve a single user from the database
-        res.render('editProfile', { preFilledData });
+        const updatedProfile = await UserProfile.findByIdAndUpdate(id, { firstname, lastname }, { new: true });
+        res.json(updatedProfile);
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data from the database');
+        console.error('Error updating profile:', error);
+        res.status(500).json({ error: 'Error updating profile' });
     }
 };
+
+
+
+
+// Compare Password
+const comparePasswords = async (plainPassword, hashedPassword) => {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+};
+
+
+
+//reset password
+const resetPassword = async (req, res) => {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    console.log("new", newPassword);
+    // Replace this with your authentication middleware to verify the user's session or token.
+    // For this example, I'll assume you already have the user's information from authentication.
+    const user = await Admin.findOne();
+
+    if (!user) {
+        return res.redirect('/edit');
+    }
+
+    const passwordMatch = await comparePasswords(oldPassword, user.password);
+    if (!passwordMatch) {
+        return res.redirect('/edit');
+    }
+
+    if (newPassword !== confirmPassword) {
+        return res.redirect('/edit');
+    }
+
+    // Hash the new password using bcrypt.
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Replace the user's password with the new hashed password in the database.
+    // In a real application, this should be done using your data storage mechanism (e.g., updating the user record in a database).
+    user.password = newHashedPassword;
+    await user.save()
+
+    // Return a success response.
+    console.log("changed")
+    res.redirect('/edit');
+
+};
+
+
+
 
 module.exports = {
     RegisterAdmin,
     LoginAdmin,
     loginLoader,
-    headerLoader,
     dashboardLoader,
     contactLoader,
-    ElementLoader,
-    blogDetailLoader,
-    blogLoader,
-    classLoader,
-    profileLoader,
-    getProfileData,
+    editLoader,
     updateProfile,
     logout,
-    register ,
+    register,
+    updateProflieApi,
+    resetPassword,
+
 }

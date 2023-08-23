@@ -5,7 +5,7 @@ const classRoutes = require("./app/routes/classRoutes")
 const aboutRoutes = require("./app/routes/aboutRoutes")
 const contactRoutes = require("./app/routes/contactRoutes")
 const blogRoutes = require("./app/routes//blogRoutes")
-const categoryRoutes = require("./app/routes/catagoryRoutes")
+
 const cors = require("cors")
 const session = require('express-session')
 const bodyParser = require('body-parser');
@@ -13,6 +13,7 @@ const path = require("path")
 const ejs = require("ejs")
 
 
+const sessoinSecret = "hellomynameisamit"
 const app = express()
 
 app.use('/uploads', express.static('uploads'));
@@ -20,6 +21,13 @@ app.use('/uploads', express.static('uploads'));
 // app.use(express.static('public'));
 
 
+app.use(
+  session({
+    secret: sessoinSecret,
+    resave: false,  // Set resave option to false
+    saveUninitialized: false  // Set saveUninitialized option to false
+  })
+);
 app.use(express.static('dist'));
 
 app.use((req, res, next) => {
@@ -63,7 +71,7 @@ app.use("/class", classRoutes)
 app.use("/about", aboutRoutes)
 app.use("/contact", contactRoutes)
 app.use("/blog", blogRoutes)
-app.use("/category" , categoryRoutes)
+
 
 
 

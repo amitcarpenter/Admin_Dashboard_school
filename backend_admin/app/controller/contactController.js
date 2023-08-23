@@ -1,33 +1,34 @@
 const Contact = require("../models/contactModels")
 const UserContact = require("../models/contact")
+const Admin = require("../models/adminModels")
 
 
 
 
 const combinedContactLoader = async (req, res) => {
     try {
-      const [data, userData] = await Promise.all([Contact.find(), UserContact.find()]);
-  
-      res.render('contact', { data, userData });
+        const [data, userData , profileData] = await Promise.all([Contact.find(), UserContact.find() ,Admin.find()]);
+
+        res.render('contact', { data, userData , profileData });
     } catch (error) {
-      console.error('Error fetching data', error);
-      res.sendStatus(500);
+        console.error('Error fetching data', error);
+        res.sendStatus(500);
     }
-  };
-  
+};
+
 
 
 const postData = async (req, res) => {
-    const { heading, massage, image, bgImage, buttonText, subheading, section } = req.body;
+    const { heading, address, bgImage, mobile, email } = req.body;
     const newData = new Contact({
         heading,
-        massage,
-        image,
+        address,
         bgImage,
-        buttonText,
-        subheading,
-        section
+        mobile,
+        email,
+
     });
+
 
     await newData.save()
         .then(() => {
@@ -58,16 +59,20 @@ const editLoader = async (req, res) => {
 const updateData = async (req, res) => {
     const id = req.params.id;
     const { heading, address, mobile, email } = req.body;
-    const image = req.files['image'] ? req.files['image'][0].path : ''; // Check if image exists before accessing properties
-    const bgImage = req.files['bgImage'] ? req.files['bgImage'][0].path : '';
+    // Check if image exists before accessing properties
+    let newCover = req.files['bgImage'] ? req.files['bgImage'][0].path : '';
 
+    // Retrieve existing blog data from the database
+    const existingBlog = await Contact.findById(id);
 
+    // Check if a new image is uploaded
+    const bgImage = newCover ? newCover : existingBlog.bgImage;
 
     await Contact.findByIdAndUpdate(
         id,
         {
             $set: {
-                heading, address, mobile, email, image, bgImage
+                heading, address, mobile, email, bgImage
 
             }
         }, { new: true })

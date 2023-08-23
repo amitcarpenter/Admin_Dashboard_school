@@ -1,7 +1,8 @@
 const express = require('express')
-const { classLoader, postData, editLoader, updateData ,getdata } = require('../controller/classController')
+const { classLoader, postData, editLoader, updateData, getdata } = require('../controller/classController')
 const multer = require('multer');
 const path = require('path');
+const { isLogout, isLogin } = require('../middleware/auth')
 
 
 
@@ -28,9 +29,9 @@ router.use(express.urlencoded({ extended: true }))
 
 
 // Routing 
-router.get("/", classLoader)
+router.get("/",isLogin, classLoader)
 
-router.get("/getdata", getdata)
+// router.get("/getdata", getdata)
 
 router.post("/postdata", postData)
 

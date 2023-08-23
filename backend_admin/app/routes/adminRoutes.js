@@ -1,11 +1,14 @@
 const express = require("express")
-const { RegisterAdmin, LoginAdmin, loginLoader, dashboardLoader, headerLoader, profileLoader, updateProfile, getProfileData, logout, register } = require("../controller/adminController")
+const { RegisterAdmin, LoginAdmin, loginLoader, dashboardLoader, updateProfile, getProfileData, logout, register, updateProflieApi, editLoader, resetPassword, headerLoader } = require("../controller/adminController")
 const session = require('express-session')
+const { isLogout, isLogin } = require('../middleware/auth')
 const router = express.Router()
 
+const jwtSecretKey = 'AmitcarPenter';
 const multer = require('multer');
 const path = require('path')
 
+// Muleter use for Upload file 
 // Muleter use for Upload file 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,30 +20,39 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+
+
+
 //middle ware
 router.use(express.json())
-router.use(express.urlencoded({extended : true}))
-
-
-router.get("/" , loginLoader   )
-router.get("/register" , register   )
-
-router.post("/register" , RegisterAdmin)
-
-router.post("/login" , LoginAdmin)
+router.use(express.urlencoded({ extended: true }))
 
 
 
-router.get("/dashboard", dashboardLoader)
+router.get("/", isLogout, loginLoader)
 
-router.get("/header" , headerLoader)
+router.get("/register", register)
 
-// router.get("/editProfile" , profileLoader)
+router.post("/register", RegisterAdmin)
 
-router.get("/editProfile" ,getProfileData )
+router.post("/", LoginAdmin)
+
+router.get("/dashboard", isLogin, dashboardLoader)
+
+router.get("/edit", editLoader)
+
+router.get("/logout", isLogin, logout)
+
+router.post("/resetpassword", resetPassword)
+
+router.post('/update', upload.fields([{ name: 'profileImage', maxCount: 1 }]), updateProfile);
 
 
 
-router.get("/logout" , logout)
+
+
+
+
+
 
 module.exports = router

@@ -1,7 +1,8 @@
 const express = require('express')
-const { contactLoader, postData, editLoader, updateData ,getdata, postFormdataForuser, usercontactLoader, combinedContactLoader } = require('../controller/contactController')
+const { contactLoader, postData, editLoader, updateData, getdata, postFormdataForuser, usercontactLoader, combinedContactLoader } = require('../controller/contactController')
 const multer = require('multer');
 const path = require('path');
+const { isLogout, isLogin } = require('../middleware/auth')
 
 
 // Muleter use for Upload file 
@@ -26,11 +27,11 @@ router.use(express.urlencoded({ extended: true }))
 
 
 // Routing
-router.get("/", combinedContactLoader)
+router.get("/", isLogin, combinedContactLoader)
 
 
 
-router.post("/usercontactdata" , postFormdataForuser )
+router.post("/usercontactdata", postFormdataForuser)
 
 router.get("/getdat", getdata)
 

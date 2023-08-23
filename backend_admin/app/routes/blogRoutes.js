@@ -1,7 +1,8 @@
 const express = require('express')
-const { postData,deleteBlog, editLoader, updateData, getdata, blogLoader, getDatawithPage, postPageData, getBlogs, PostLoader, addPost, viewButton, blogController } = require('../controller/blogControllers')
+const { postData, deleteBlog, editLoader, updateData, getdata, blogLoader, getDatawithPage, postPageData, getBlogs, PostLoader, addPost, viewButton, blogController } = require('../controller/blogControllers')
 const multer = require('multer');
 const path = require('path')
+const { isLogout, isLogin } = require('../middleware/auth')
 
 // Muleter use for Upload file 
 const storage = multer.diskStorage({
@@ -23,7 +24,7 @@ router.use(express.urlencoded({ extended: true }))
 
 
 // Routing
-router.get("/", blogLoader)
+router.get("/",isLogin, blogLoader)
 
 router.get("/add-post", PostLoader)
 
@@ -41,12 +42,12 @@ router.post("/senddata", postPageData)
 
 router.get("/edit/:id", editLoader)
 
-router.post('/update/:id', upload.fields([{ name: 'image', maxCount: 1 }]), updateData);
+router.post('/update/:id', upload.fields([{ name: 'cover', maxCount: 1 }]), updateData);
 
-router.get("/view/:id" , viewButton)
+router.get("/view/:id", viewButton)
 // router.get('/view/:id?', blogController);
 
-router.post('/delete/:id' , deleteBlog)
+router.post('/delete/:id', deleteBlog)
 
 
 module.exports = router

@@ -1,4 +1,5 @@
 const About = require("../models/aboutModels")
+const Admin = require("../models/adminModels")
 
 
 
@@ -7,14 +8,9 @@ const About = require("../models/aboutModels")
 // About Loader
 const aboutLoader = async (req, res) => {
     try {
-        await About.find()
-            .then((data) => {
-                res.render('about', { data });
-            })
-            .catch((error) => {
-                console.error('Error fetching data', error);
-                res.sendStatus(500);
-            });
+        const [data, profileData] = await Promise.all([About.find(), Admin.find()]);
+        res.render('about', { data , profileData });
+       
 
     } catch (error) {
         console.log(error)
@@ -66,8 +62,15 @@ const editLoader = async (req, res) => {
 const updateData = async (req, res) => {
     const id = req.params.id;
     const { section, heading, massage, subheading, buttonText } = req.body;
-    const image = req.files['image'] ? req.files['image'][0].path : ''; // Check if image exists before accessing properties
-    const bgImage = req.files['bgImage'] ? req.files['bgImage'][0].path : '';
+    const newCover = req.files['image'] ? req.files['image'][0].path : ''; // Check if image exists before accessing properties
+    const newbgcover = req.files['bgImage'] ? req.files['bgImage'][0].path : '';
+
+    // Retrieve existing blog data from the database
+    const existingBlog = await About.findById(id);
+
+    // Check if a new image is uploaded
+    const image = newCover ? newCover : existingBlog.image;
+    const bgImage = newbgcover ? newbgcover : existingBlog.bgImgae;
 
     await About.findByIdAndUpdate(
         id,
@@ -101,6 +104,6 @@ module.exports = {
     aboutLoader,
     updateData,
     editLoader,
-    postData ,
-    getdata ,
+    postData,
+    getdata,
 }

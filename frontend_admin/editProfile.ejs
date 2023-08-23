@@ -36,18 +36,21 @@
                         </div>
                         <div class="card-body">
 
-                            <form>
-                          
+                            <form action="/update" method="post" enctype="multipart/form-data">
+
 
                                 <div class="text-center mt-3">
-                                    <img src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                                        alt="Current Image" class="profile-image mb-3">
+                                    <img src="/<%= data.profileImage %>" alt="Current Image" class="profile-image mb-3">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="profileImage" aria-describedby="inputGroupFileAddon01">
+                                        <input type="file" class="custom-file-input" id="profileImage"
+                                            name="profileImage" aria-describedby="inputGroupFileAddon01">
                                         <label class="custom-file-label" for="profileImage">Choose file</label>
                                     </div>
                                 </div>
 
+                         
+
+                                <input type="hidden" name="userId" value="<%= data._id %>">
 
 
 
@@ -57,21 +60,23 @@
                                     <div class="row">
                                         <div class="col">
                                             <input type="text" class="form-control" placeholder="First name"
-                                                value="<%= preFilledData.firstname  %>">
+                                                name="firstname" id="firstname" value="<%= data.firstname  %>">
                                         </div>
                                         <div class="col">
                                             <input type="text" class="form-control" placeholder="Last name"
-                                                value="<%= preFilledData.lastname %>">
+                                                name="lastname" id="lastname" value="<%= data.lastname %>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter your email"
-                                        value="<%= preFilledData.email %>">
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        placeholder="Enter your email" value="<%= data.email %>">
                                 </div>
+                                <input type="hidden" id="userId" value="<%= data._id %>">
 
-                                <button type="button" class="btn btn-primary">Update Profile</button>
+                                <button type="submit" id="updateProfileBtn" class="btn btn-primary">Update
+                                    Profile</button>
                                 <button type="button" class="btn btn-secondary ml-2" data-toggle="modal"
                                     data-target="#resetPasswordModal">Reset Password</button>
                             </form>
@@ -80,6 +85,39 @@
                 </div>
             </div>
         </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            // Function to update user profile
+            async function updateProfile() {
+
+                const firstname = document.querySelector('#firstname').value;
+                const lastname = document.querySelector('#lastname').value;
+
+                // const profileImage = document.querySelector('#profileImage').files[0];
+
+
+
+                const formData = new FormData();
+
+                formData.append('firstname', firstname);
+                formData.append('lastname', lastname);
+
+
+
+                try {
+                    const response = await axios.put(`/api/update-profile/${id}`, { firstname, lastname });
+                    console.log('Profile updated:', response.data);
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                }
+            }
+
+            // Attach event listener to the "Update Profile" button
+            document.querySelector('#updateProfileBtn').addEventListener('click', updateProfile);
+        </script>
 
         <!-- Add Bootstrap JS and Popper.js scripts here -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -100,29 +138,32 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <form>
+                    <form action="/resetpassword" method="post">
+                        <div class="modal-body">
+
                             <div class="form-group">
                                 <label for="oldPassword">Old Password</label>
-                                <input type="password" class="form-control" id="oldPassword"
+                                <input type="password" class="form-control" id="oldPassword" name="oldPassword"
                                     placeholder="Enter old password">
                             </div>
                             <div class="form-group">
                                 <label for="newPassword">New Password</label>
                                 <input type="password" class="form-control" id="newPassword"
+                            name="newPassword"
                                     placeholder="Enter new password">
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password</label>
                                 <input type="password" class="form-control" id="confirmPassword"
-                                    placeholder="Confirm new password">
+                                 name="confirmPassword"   placeholder="Confirm new password">
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Reset Password</button>
-                    </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Reset Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
