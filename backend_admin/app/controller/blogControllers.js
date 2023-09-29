@@ -312,5 +312,6 @@ module.exports = {
     addPost,
     viewButton,
     deleteBlog,
+    getBlogsbyId,
     // blogController,
 }
