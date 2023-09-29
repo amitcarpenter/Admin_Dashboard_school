@@ -33,7 +33,7 @@ router.get("/", isLogin, combinedContactLoader)
 
 router.post("/usercontactdata", postFormdataForuser)
 
-router.get("/getdat", getdata)
+router.get("/getdata", getdata)
 
 router.post("/postdata", postData)
 
