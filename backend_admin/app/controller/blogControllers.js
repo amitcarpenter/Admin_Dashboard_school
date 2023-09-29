@@ -125,27 +125,60 @@ const updateData = async (req, res) => {
 
 // Get paginated blogs with search
 const getBlogs = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
-    const skip = (page - 1) * limit;
-    const search = req.query.search || '';
+//   const page = parseInt(req.query.page) || 1;
+//   const limit = parseInt(req.query.limit) || 5;
+//   const skip = (page - 1) * limit;
+//   const search = req.query.search || "";
 
-    try {
-        // Retrieve paginated blog posts sorted by createdAt in descending order
-        const blogs = await Blog.find({ title: { $regex: search, $options: 'i' } })
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
+//   try {
 
-        const totalBlogs = await Blog.countDocuments({ title: { $regex: search, $options: 'i' } });
+//     // Retrieve paginated blog posts sorted by createdAt in descending order
+//     const blogs = await Blog.find({ title: { $regex: search, $options: "i" } })
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(limit);
 
-        res.json({
-            totalPages: Math.ceil(totalBlogs / limit),
-            blogs,
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+//     const totalBlogs = await Blog.countDocuments({
+//       title: { $regex: search, $options: "i" },
+//     });
+//     console.log("total blog", totalBlogs);
+
+//     res.json({
+//       totalPages: Math.ceil(totalBlogs / limit),
+//       blogs,
+//     });
+//     console.log(blogs);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+  try {
+    // Retrieve paginated blog posts sorted by createdAt in descending order
+    const blogs = await Blog.find()
+    res.json({
+      blogs,
+    });
+    console.log(blogs);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Get paginated blogs with search
+const getBlogsbyId = async (req, res) => {
+  const blogId = req.params.id;
+
+  try {
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
     }
+    res.json({ blog });
+    console.log("logo kam kr lo");
+    console.log(blog);
+  } catch (error) {
+    // Handle any errors that occur during database query
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 
