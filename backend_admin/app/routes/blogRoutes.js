@@ -1,5 +1,5 @@
 const express = require('express')
-const { postData, deleteBlog, editLoader, updateData, getdata, blogLoader, getDatawithPage, postPageData, getBlogs, PostLoader, addPost, viewButton, blogController } = require('../controller/blogControllers')
+const { postData, deleteBlog, editLoader, updateData, getdata, blogLoader, getDatawithPage, postPageData, getBlogs, PostLoader, addPost, viewButton, blogController,getBlogsbyId } = require('../controller/blogControllers')
 const multer = require('multer');
 const path = require('path')
 const { isLogout, isLogin } = require('../middleware/auth')
