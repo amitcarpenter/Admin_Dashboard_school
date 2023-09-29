@@ -30,8 +30,7 @@ router.use(express.urlencoded({ extended: true }))
 
 // Routing 
 router.get("/",isLogin, classLoader)
-
-// router.get("/getdata", getdata)
+ router.get("/getdata", getdata)
 
 router.post("/postdata", postData)
 
