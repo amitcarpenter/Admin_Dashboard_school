@@ -36,6 +36,8 @@ router.get("/getdata", getdata)
 
 router.get("/getblog", getBlogs)
 
+router.get("/getblogbyid/:id", getBlogsbyId)
+
 router.get("/get", getDatawithPage)
 
 router.post("/senddata", postPageData)
