@@ -73,23 +73,5 @@ app.use("/contact", contactRoutes)
 app.use("/blog", blogRoutes)
 
 
-function hitURL() {
-    const urlToHit = "https://school-management-dashboard.onrender.com/";
-    fetch(urlToHit)
-        .then(response => {
-            if (response.ok) {
-                console.log(`URL "${urlToHit}" was successfully hit at ${new Date()}`);
-            } else {
-                console.error(`Failed to hit URL "${urlToHit}" at ${new Date()}`);
-            }
-        })
-        .catch(error => {
-            console.error(`Error while hitting URL "${urlToHit}": ${error}`);
-        });
-}
-
-hitURL(); 
-const intervalID = setInterval(hitURL, 50000);
-
 
 module.exports = app;
